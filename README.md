@@ -150,9 +150,7 @@ blastn -query input_sequence.fasta -db nt -out results.txt -template_type discon
 We welcome contributions! If you have any bug reports, feature requests, or pull requests, please follow these steps:
 
 1. **Fork the Repository**: Click the "Fork" button on the repository page to create a copy of the repository under your own GitHub account.
-2. **Clone
-
- Your Fork**: Clone the repository to your local machine.
+2. **CloneYour Fork**: Clone the repository to your local machine.
     ```bash
     git clone https://github.com/yourusername/pyblast.git
     ```
