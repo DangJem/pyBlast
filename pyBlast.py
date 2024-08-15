@@ -10,7 +10,9 @@ class BlastTool:
                     'database creation, and querying functionalities.',
         formatter_class=argparse.RawTextHelpFormatter)
         self.subparsers = self.parser.add_subparsers(dest='command')
-        
+
+
+############### ADD COMMENT BELOW
         self.parser.epilog = (
             '\033[1;34mBLAST (Basic Local Alignment Search Tool)\033[0m is a widely used bioinformatics tool designed to identify similarities between sequences. '
             'It helps in functional, structural, and evolutionary studies of sequences by finding local alignments between them.\n\n'
@@ -42,7 +44,7 @@ class BlastTool:
             '  - \033[1;33mpython pyBlast.py makeblastdb -h\033[0m\n'
             '  - \033[1;33mpython pyBlast.py blastp -h\033[0m\n'
         )
-
+############################################# ADD COMMENT ABOVE
 
     def define_blastn_arguments(self):
         blastn_parser = self.subparsers.add_parser(
@@ -1075,6 +1077,250 @@ class BlastTool:
         )
 
 
+
+##################################
+    def define_blastx_arguments(self):
+        blastx_parser = self.subparsers.add_parser(
+            'blastx',
+            help='Perform protein query vs. translated nucleotide database search',
+            formatter_class=argparse.RawTextHelpFormatter,
+            description=(
+                'The \033[1;32mblastx\033[0m command aligns protein queries against a nucleotide database that is dynamically translated '
+                'in all reading frames, allowing for comparisons across species and genomic analysis. This can be particularly useful for discovering protein coding genes and annotating transcriptomic data.\n\n'
+                'Key Features:\n'
+                '  - Translate nucleotide sequences dynamically for protein-level comparisons.\n'
+                '  - Comprehensive filtering and scoring mechanisms to refine your results.\n'
+                '  - Customizable output formats for various downstream applications and analyses.\n\n'
+                'Typical Usage:\n'
+                '  \033[1;33mpython pyBlast.py blastx -query query.fasta -db protein_db -out results.txt -evalue 1e-5\033[0m\n'
+                '  This command performs a BLASTX search using sequences from \033[1;33mquery.fasta\033[0m against the protein database \033[1;33mprotein_db\033[0m, '
+                'with results saved to \033[1;33mresults.txt\033[0m and an E-value threshold of \033[1;33m1e-5\033[0m.\n\n'
+                'Additional Options:\n'
+                '  \033[1;33m-query\033[0m: Input file containing nucleotide sequences to be translated and searched.\n'
+                '  \033[1;33m-db\033[0m: Name of the protein database to search against.\n'
+                '  \033[1;33m-out\033[0m: File to write the results to.\n'
+                '  \033[1;33m-evalue\033[0m: E-value threshold for reporting matches.\n'
+                '  \033[1;33m-task\033[0m: Specific BLASTX task to use (e.g., blastx-fast, blastx).\n'
+            )
+        )
+
+        blastx_parser.add_argument(
+            '-help', 
+            action='store_true', 
+            help='\033[1;36mPrint USAGE, DESCRIPTION and ARGUMENTS; ignore all other parameters\033[0m\nDisplay the usage message, program description, and argument information, ignoring any other specified parameters.'
+        )
+        blastx_parser.add_argument(
+            '-version', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mPrint version number; ignore other arguments\033[0m\nShow the version number of the program and ignore all other parameters.'
+        )
+        blastx_parser.add_argument(
+            '-import_search_strategy', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mSearch strategy file to import\033[0m\nSpecify a search strategy file to import for the BLAST search.'
+        )
+        blastx_parser.add_argument(
+            '-export_search_strategy', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mFile to record the search strategy used\033[0m\nProvide a file name to export and save the search strategy used in the BLAST search.'
+        )
+        blastx_parser.add_argument(
+            '-task', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mTask to execute\033[0m\nSpecify the BLAST task to perform, such as blastx, blastx-fast, etc.'
+        )
+        blastx_parser.add_argument(
+            '-db', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mBLAST database name\033[0m\nProvide the name of the BLAST database to search against.'
+        )
+        blastx_parser.add_argument(
+            '-dbsize', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mEffective length of the database\033[0m\nSpecify the effective length of the database, used for statistical calculations.'
+        )
+        blastx_parser.add_argument(
+            '-gilist', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to list of GIs\033[0m\nLimit the search to a specified list of GI (GenInfo Identifier) numbers.'
+        )
+        blastx_parser.add_argument(
+            '-seqidlist', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to list of SeqIDs\033[0m\nLimit the search to a specified list of sequence IDs.'
+        )
+        blastx_parser.add_argument(
+            '-negative_gilist', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to everything except the specified GIs\033[0m\nExclude a list of GI numbers from the search.'
+        )
+        blastx_parser.add_argument(
+            '-negative_seqidlist', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to everything except the specified SeqIDs\033[0m\nExclude a list of sequence IDs from the search.'
+        )
+        blastx_parser.add_argument(
+            '-taxids', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to specified taxonomy IDs and descendants\033[0m\nLimit the search to specific taxonomy IDs and their descendant taxa.'
+        )
+        blastx_parser.add_argument(
+            '-negative_taxids', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to everything except the specified taxonomy IDs and descendants\033[0m\nExclude specified taxonomy IDs and their descendant taxa from the search.'
+        )
+        blastx_parser.add_argument(
+            '-taxidlist', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to list of taxonomy IDs and descendants\033[0m\nLimit the search to a list of taxonomy IDs and their descendants.'
+        )
+        blastx_parser.add_argument(
+            '-negative_taxidlist', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to everything except the specified taxonomy IDs and descendants\033[0m\nExclude a list of taxonomy IDs and their descendants from the search.'
+        )
+        blastx_parser.add_argument(
+            '-no_taxid_expansion', 
+            action='store_true', 
+            help='\033[1;36mDo not expand the taxonomy IDs provided to their descendant taxonomy IDs\033[0m\nPrevent the automatic expansion of taxonomy IDs to include their descendants.'
+        )
+        blastx_parser.add_argument(
+            '-ipglist', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to list of IPGs\033[0m\nLimit the search to a specified list of IPGs (Identical Protein Groups).'
+        )
+        blastx_parser.add_argument(
+            '-negative_ipglist', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search to everything except the specified IPGs\033[0m\nExclude a list of IPGs from the search.'
+        )
+        blastx_parser.add_argument(
+            '-entrez_query', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mRestrict search with the given Entrez query\033[0m\nFilter the search results using an Entrez query.'
+        )
+        blastx_parser.add_argument(
+            '-db_soft_mask', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mFiltering algorithm to apply to the database as soft masking\033[0m\nApply soft masking to the database using the specified filtering algorithm.'
+        )
+        blastx_parser.add_argument(
+            '-db_hard_mask', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mFiltering algorithm to apply to the database as hard masking\033[0m\nApply hard masking to the database using the specified filtering algorithm.'
+        )
+        blastx_parser.add_argument(
+            '-subject', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mSubject sequence(s) to search\033[0m\nProvide the subject sequence(s) for the BLAST search.'
+        )
+        blastx_parser.add_argument(
+            '-subject_loc', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mLocation on the subject sequence in 1-based offsets (Format: start-stop)\033[0m\nSpecify the location on the subject sequence using 1-based offsets (e.g., 100-200).'
+        )
+        blastx_parser.add_argument(
+            '-query', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mInput file name\033[0m\nSpecify the input file name containing the query sequence(s).'
+        )
+        blastx_parser.add_argument(
+            '-out', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mOutput file name\033[0m\nProvide the output file name for saving the results of the BLAST search.'
+        )
+        blastx_parser.add_argument(
+            '-evalue', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mExpectation value (E) threshold for saving hits\033[0m\nSet the expectation value (E-value) threshold for retaining significant hits.'
+        )
+        blastx_parser.add_argument(
+            '-word_size', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mWord size for wordfinder algorithm\033[0m\nSpecify the word size for the wordfinder algorithm in the BLAST search.'
+        )
+        blastx_parser.add_argument(
+            '-gapopen', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mCost to open a gap\033[0m\nDefine the penalty for opening a gap in alignments.'
+        )
+        blastx_parser.add_argument(
+            '-gapextend', 
+            nargs='?', 
+            default='NotUsed', 
+            const='UseWithoutParam', 
+            help='\033[1;36mCost to extend a gap\033[0m\nDefine the penalty for extending a gap in alignments.'
+        )
+
+
+###############################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def run(self):
         args = self.parser.parse_args()
         if args.command is None:
@@ -1088,6 +1334,10 @@ class BlastTool:
             program_path = shutil.which('makeblastdb')
         elif args.command == 'blastp':
             program_path = shutil.which('blastp')
+#################################
+
+
+##################################
         else:
             print(f"Unknown command: {args.command}")
             sys.exit(1)
@@ -1098,12 +1348,20 @@ class BlastTool:
 
         command = [program_path]
 
+
+
+
+#####################################
         if args.command == 'blastn':
             self.run_blastn(args, command)
         elif args.command == 'makeblastdb':
             self.run_makeblastdb(args, command)
         elif args.command == 'blastp':
             self.run_blastp(args, command)
+#################################
+
+
+
 
 
     def run_blastn(self, args, command):
@@ -1168,9 +1426,33 @@ class BlastTool:
         #print(command)
 
 
+
+#######################################
+
+
+
+
+
+#########################################
+
+
+
+
+
+
+
+
+
 if __name__ == "__main__":
     tool = BlastTool()
     tool.define_blastn_arguments()
     tool.define_makeblastdb_arguments()
     tool.define_blastp_arguments()
+    ###################################
+    
+    
+    
+    
+    ##########################################
     tool.run()
+
