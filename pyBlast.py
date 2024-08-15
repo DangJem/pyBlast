@@ -1308,6 +1308,727 @@ class BlastTool:
 ###############################
 
 
+###############################
+        def define_tblastn_arguments(self):
+            tblastn_parser = self.subparsers.add_parser(
+                'tblastn',
+                help='Perform protein query against translated nucleotide database search',
+                formatter_class=argparse.RawTextHelpFormatter,
+                description=(
+                    'The \033[1;32mtblastn\033[0m command aligns protein sequences against a nucleotide database that is dynamically translated into all reading frames. '
+                    'This is particularly useful for detecting potential coding regions in nucleotide sequences and for comparative genomics.\n\n'
+                    'Key Features:\n'
+                    '  - Translates nucleotide databases into protein sequences dynamically for alignment against protein queries.\n'
+                    '  - Various filtering, scoring, and alignment customization options to refine search results.\n'
+                    '  - Supports different output formats for downstream analysis and integration with other bioinformatics tools.\n\n'
+                    'Typical Usage:\n'
+                    '  \033[1;33mpython pyBlast.py tblastn -query protein.fasta -db nucleotide_db -out results.txt -evalue 1e-3\033[0m\n'
+                    '  This command performs a TBLASTN search using sequences from \033[1;33mprotein.fasta\033[0m against the nucleotide database \033[1;33mnucleotide_db\033[0m, '
+                    'with results saved to \033[1;33mresults.txt\033[0m and an E-value threshold of \033[1;33m1e-3\033[0m.\n\n'
+                    'Additional Options:\n'
+                    '  \033[1;33m-query\033[0m: Input file containing protein sequences to search against the translated nucleotide database.\n'
+                    '  \033[1;33m-db\033[0m: Name of the nucleotide database to search, which will be dynamically translated into protein sequences.\n'
+                    '  \033[1;33m-out\033[0m: File to write the results to.\n'
+                    '  \033[1;33m-evalue\033[0m: E-value threshold for reporting significant matches.\n'
+                    '  \033[1;33m-task\033[0m: Specific TBLASTN task to execute (e.g., tblastn, tblastn-fast).\n'
+                )
+            )
+
+            # Adding tblastn specific arguments
+            tblastn_parser.add_argument(
+                '-help',
+                action='store_true',
+                help=(
+                    '\033[1;33m-help\033[0m\n'
+                    'Display help information for the tblastn command, including usage, description, and options.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-version',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-version\033[0m\n'
+                    'Print the version number of the TBLASTN tool. This option will ignore all other parameters and only print the version information.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-import_search_strategy',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-import_search_strategy\033[0m\n'
+                    'Specify a file from which to import search strategy parameters.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-export_search_strategy',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-export_search_strategy\033[0m\n'
+                    'Specify a file to export the search strategy parameters used in the search.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-task',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-task\033[0m\n'
+                    'Specify the TBLASTN task to execute, such as `tblastn` for standard searches or `tblastn-fast` for faster searches.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-db',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-db\033[0m\n'
+                    'Specify the nucleotide database to search against. The database will be dynamically translated into protein sequences for the search.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-dbsize',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-dbsize\033[0m\n'
+                    'Specify the effective length of the database for calculations.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-gilist',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-gilist\033[0m\n'
+                    'Restrict the search to a specific list of GI numbers provided in a file.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-seqidlist',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-seqidlist\033[0m\n'
+                    'Restrict the search to a specific list of SeqIDs provided in a file.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-negative_gilist',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-negative_gilist\033[0m\n'
+                    'Restrict the search to everything except the GI numbers specified in the list file.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-negative_seqidlist',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-negative_seqidlist\033[0m\n'
+                    'Restrict the search to everything except the SeqIDs specified in the list file.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-taxids',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-taxids\033[0m\n'
+                    'Restrict the search to specified taxonomy IDs and their descendants.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-negative_taxids',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-negative_taxids\033[0m\n'
+                    'Restrict the search to everything except the specified taxonomy IDs and their descendants.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-taxidlist',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-taxidlist\033[0m\n'
+                    'Restrict the search to a list of taxonomy IDs and their descendants provided in a file.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-negative_taxidlist',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-negative_taxidlist\033[0m\n'
+                    'Restrict the search to everything except the taxonomy IDs and their descendants listed in the file.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-no_taxid_expansion',
+                action='store_true',
+                help=(
+                    '\033[1;33m-no_taxid_expansion\033[0m\n'
+                    'Do not expand the provided taxonomy IDs to include their descendant taxonomy IDs.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-entrez_query',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-entrez_query\033[0m\n'
+                    'Restrict the search with the given Entrez query.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-db_soft_mask',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-db_soft_mask\033[0m\n'
+                    'Specify a filtering algorithm to apply to the database as soft masking.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-db_hard_mask',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-db_hard_mask\033[0m\n'
+                    'Specify a filtering algorithm to apply to the database as hard masking.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-subject',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-subject\033[0m\n'
+                    'Specify the input file containing subject sequences for the search.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-subject_loc',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-subject_loc\033[0m\n'
+                    'Specify the location on the subject sequence in 1-based offsets (Format: start-stop).'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-query',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-query\033[0m\n'
+                    'Specify the input file containing protein sequences to search against the translated nucleotide database.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-out',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-out\033[0m\n'
+                    'Specify the file to write the results of the search to.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-evalue',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-evalue\033[0m\n'
+                    'Specify the Expectation value (E) threshold for saving hits.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-word_size',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-word_size\033[0m\n'
+                    'Specify the word size for the wordfinder algorithm.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-gapopen',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-gapopen\033[0m\n'
+                    'Specify the cost to open a gap.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-gapextend',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-gapextend\033[0m\n'
+                    'Specify the cost to extend a gap.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-qcov_hsp_perc',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-qcov_hsp_perc\033[0m\n'
+                    'Specify the percent query coverage per HSP.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-max_hsps',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-max_hsps\033[0m\n'
+                    'Specify the maximum number of HSPs per subject sequence to save for each query.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-xdrop_ungap',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-xdrop_ungap\033[0m\n'
+                    'Specify the X-dropoff value for ungapped extensions.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-xdrop_gap',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-xdrop_gap\033[0m\n'
+                    'Specify the X-dropoff value for preliminary gapped extensions.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-xdrop_gap_final',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-xdrop_gap_final\033[0m\n'
+                    'Specify the X-dropoff value for final gapped alignment.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-searchsp',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-searchsp\033[0m\n'
+                    'Specify the effective length of the search space.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-sum_stats',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-sum_stats\033[0m\n'
+                    'Enable or disable sum statistics.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-db_gencode',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-db_gencode\033[0m\n'
+                    'Specify the genetic code to use for database translation.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-ungapped',
+                action='store_true',
+                help=(
+                    '\033[1;33m-ungapped\033[0m\n'
+                    'Perform ungapped alignment only.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-max_intron_length',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-max_intron_length\033[0m\n'
+                    'Specify the maximum intron length.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-seg',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-seg\033[0m\n'
+                    'Specify SEG filtering options.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-soft_masking',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-soft_masking\033[0m\n'
+                    'Apply filtering locations as soft masks.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-matrix',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-matrix\033[0m\n'
+                    'Specify the scoring matrix name.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-threshold',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-threshold\033[0m\n'
+                    'Specify the minimum score threshold for extending hits.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-culling_limit',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-culling_limit\033[0m\n'
+                    'Specify the limit on hits enveloped by higher-scoring hits.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-best_hit_overhang',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-best_hit_overhang\033[0m\n'
+                    'Specify the best hit algorithm overhang value.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-best_hit_score_edge',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-best_hit_score_edge\033[0m\n'
+                    'Specify the best hit algorithm score edge value.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-subject_besthit',
+                action='store_true',
+                help=(
+                    '\033[1;33m-subject_besthit\033[0m\n'
+                    'Enable the best hit per subject sequence.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-window_size',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-window_size\033[0m\n'
+                    'Specify the window size for multiple hits (use 0 to specify 1-hit algorithm).'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-lcase_masking',
+                action='store_true',
+                help=(
+                    '\033[1;33m-lcase_masking\033[0m\n'
+                    'Enable lowercase masking in query and subject sequences.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-query_loc',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-query_loc\033[0m\n'
+                    'Specify the location on the query sequence in 1-based offsets (Format: start-stop).'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-parse_deflines',
+                action='store_true',
+                help=(
+                    '\033[1;33m-parse_deflines\033[0m\n'
+                    'Enable parsing of query and subject deflines.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-outfmt',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-outfmt\033[0m\n'
+                    'Specify the output alignment format.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-show_gis',
+                action='store_true',
+                help=(
+                    '\033[1;33m-show_gis\033[0m\n'
+                    'Display NCBI GI numbers in deflines.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-num_descriptions',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-num_descriptions\033[0m\n'
+                    'Specify the number of descriptions to show in the output.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-num_alignments',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-num_alignments\033[0m\n'
+                    'Specify the number of alignments to show in the output.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-line_length',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-line_length\033[0m\n'
+                    'Specify the line length for the output.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-html',
+                action='store_true',
+                help=(
+                    '\033[1;33m-html\033[0m\n'
+                    'Generate output in HTML format.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-sorthits',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-sorthits\033[0m\n'
+                    'Specify how to sort hits in the output.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-sorthsps',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-sorthsps\033[0m\n'
+                    'Specify how to sort HSPs in the output.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-max_target_seqs',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-max_target_seqs\033[0m\n'
+                    'Specify the maximum number of target sequences to report.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-num_threads',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-num_threads\033[0m\n'
+                    'Specify the number of threads to use for parallel processing.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-mt_mode',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-mt_mode\033[0m\n'
+                    'Specify the mode of multi-threading for BLAST searches.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-remote',
+                action='store_true',
+                help=(
+                    '\033[1;33m-remote\033[0m\n'
+                    'Perform the search using the NCBI BLAST service instead of local resources.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-comp_based_stats',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-comp_based_stats\033[0m\n'
+                    'Enable or disable composition-based statistics.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-use_sw_tback',
+                action='store_true',
+                help=(
+                    '\033[1;33m-use_sw_tback\033[0m\n'
+                    'Use Smith-Waterman traceback for alignments.'
+                )
+            )
+
+            tblastn_parser.add_argument(
+                '-in_pssm',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-in_pssm\033[0m\n'
+                    'Specify a PSI-BLAST checkpoint file for use in the search.'
+                )
+            )
+################################
+
+
+
+###################################
+
+
+
+#####################################
+
+
 
 
 
