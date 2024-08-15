@@ -12,39 +12,62 @@ class BlastTool:
         self.subparsers = self.parser.add_subparsers(dest='command')
 
 
-############### ADD COMMENT BELOW
-        self.parser.epilog = (
-            '\033[1;34mBLAST (Basic Local Alignment Search Tool)\033[0m is a widely used bioinformatics tool designed to identify similarities between sequences. '
-            'It helps in functional, structural, and evolutionary studies of sequences by finding local alignments between them.\n\n'
-            'The suite includes:\n'
-            '  \033[1;32m1. blastn:\033[0m Perform nucleotide-nucleotide alignments\n'
-            '     Aligns nucleotide sequences against a nucleotide database. Useful for gene discovery, sequence annotation, and comparative genomics.\n'
-            '     \033[1;36mExample usage:\033[0m\n'
-            '       \033[1;33mpython pyBlast.py blastn -query my_query.fasta -db my_database -out results.out\033[0m\n'
-            '     This command aligns sequences from \033[1;33mmy_query.fasta\033[0m with \033[1;33mm\033[0m and saves the results to \033[1;33mresults.out\033[0m.\n\n'
-            '  \033[1;32m2. makeblastdb:\033[0m Create BLAST databases\n'
-            '     Converts raw sequence files into a searchable database format for BLAST. Supports various input types, including nucleotides and proteins.\n'
-            '     \033[1;36mExample usage:\033[0m\n'
-            '       \033[1;33mpython pyBlast.py makeblastdb -in my_sequences.fasta -dbtype nucl -title "My Nucleotide Database" -out my_database\033[0m\n'
-            '     This command creates a nucleotide database from \033[1;33mm\033[0m with the title \033[1;33m"My Nucleotide Database"\033[0m, and outputs it to \033[1;33mm\033[0m.\n\n'
-            '  \033[1;32m3. blastp:\033[0m Perform protein-protein alignments\n'
-            '     Aligns protein sequences against a protein database to find similar proteins and infer their functional and evolutionary relationships.\n'
-            '     \033[1;36mExample usage:\033[0m\n'
-            '       \033[1;33mpython pyBlast.py blastp -query my_protein_query.fasta -db my_protein_database -out results.out\033[0m\n'
-            '     This command aligns sequences from \033[1;33mm\033[0m with \033[1;33mm\033[0m and saves the results to \033[1;33mresults.out\033[0m.\n\n'
-            'Basic usage examples:\n'
-            '  - \033[1;32mNucleotide alignments:\033[0m\n'
-            '    \033[1;33mpython pyBlast.py blastn -query my_query.fasta -db my_database\033[0m\n'
-            '  - \033[1;32mCreate a BLAST database:\033[0m\n'
-            '    \033[1;33mpython pyBlast.py makeblastdb -in my_sequences.fasta -dbtype nucl\033[0m\n'
-            '  - \033[1;32mProtein alignments:\033[0m\n'
-            '    \033[1;33mpython pyBlast.py blastp -query my_protein_query.fasta -db my_protein_database\033[0m\n\n'
-            'For detailed help on each subcommand, use:\n'
-            '  - \033[1;33mpython pyBlast.py blastn -h\033[0m\n'
-            '  - \033[1;33mpython pyBlast.py makeblastdb -h\033[0m\n'
-            '  - \033[1;33mpython pyBlast.py blastp -h\033[0m\n'
-        )
-############################################# ADD COMMENT ABOVE
+self.parser.epilog = (
+    '\033[1;34mBLAST (Basic Local Alignment Search Tool)\033[0m is a widely used bioinformatics tool designed to identify similarities between sequences. '
+    'It helps in functional, structural, and evolutionary studies of sequences by finding local alignments between them.\n\n'
+    'The suite includes:\n'
+    '  \033[1;32m1. blastn:\033[0m Perform nucleotide-nucleotide alignments\n'
+    '     Aligns nucleotide sequences against a nucleotide database. Useful for gene discovery, sequence annotation, and comparative genomics.\n'
+    '     \033[1;36mExample usage:\033[0m\n'
+    '       \033[1;33mpython pyBlast.py blastn -query my_query.fasta -db my_database -out results.out\033[0m\n'
+    '     This command aligns sequences from \033[1;33mmy_query.fasta\033[0m with \033[1;33mm\033[0m and saves the results to \033[1;33mresults.out\033[0m.\n\n'
+    '  \033[1;32m2. makeblastdb:\033[0m Create BLAST databases\n'
+    '     Converts raw sequence files into a searchable database format for BLAST. Supports various input types, including nucleotides and proteins.\n'
+    '     \033[1;36mExample usage:\033[0m\n'
+    '       \033[1;33mpython pyBlast.py makeblastdb -in my_sequences.fasta -dbtype nucl -title "My Nucleotide Database" -out my_database\033[0m\n'
+    '     This command creates a nucleotide database from \033[1;33mm\033[0m with the title \033[1;33m"My Nucleotide Database"\033[0m, and outputs it to \033[1;33mm\033[0m.\n\n'
+    '  \033[1;32m3. blastp:\033[0m Perform protein-protein alignments\n'
+    '     Aligns protein sequences against a protein database to find similar proteins and infer their functional and evolutionary relationships.\n'
+    '     \033[1;36mExample usage:\033[0m\n'
+    '       \033[1;33mpython pyBlast.py blastp -query my_protein_query.fasta -db my_protein_database -out results.out\033[0m\n'
+    '     This command aligns sequences from \033[1;33mm\033[0m with \033[1;33mm\033[0m and saves the results to \033[1;33mresults.out\033[0m.\n\n'
+    '  \033[1;32m4. blastx:\033[0m Translate nucleotide sequences and perform protein-protein alignments\n'
+    '     Translates nucleotide sequences into proteins and then performs protein-protein alignments against a protein database.\n'
+    '     \033[1;36mExample usage:\033[0m\n'
+    '       \033[1;33mpython pyBlast.py blastx -query my_nucleotide_query.fasta -db my_protein_database -out results.out\033[0m\n'
+    '     This command translates sequences from \033[1;33mm\033[0m and aligns them with \033[1;33mm\033[0m, saving the results to \033[1;33mresults.out\033[0m.\n\n'
+    '  \033[1;32m5. tblastn:\033[0m Perform protein-nucleotide alignments\n'
+    '     Aligns protein sequences against a nucleotide database by translating the nucleotide sequences into proteins.\n'
+    '     \033[1;36mExample usage:\033[0m\n'
+    '       \033[1;33mpython pyBlast.py tblastn -query my_protein_query.fasta -db my_nucleotide_database -out results.out\033[0m\n'
+    '     This command aligns protein sequences from \033[1;33mm\033[0m with the translated nucleotide database \033[1;33mm\033[0m, saving results to \033[1;33mresults.out\033[0m.\n\n'
+    '  \033[1;32m6. tblastx:\033[0m Perform nucleotide-nucleotide alignments with translation\n'
+    '     Translates both nucleotide sequences in the query and database into proteins and performs protein-protein alignments.\n'
+    '     \033[1;36mExample usage:\033[0m\n'
+    '       \033[1;33mpython pyBlast.py tblastx -query my_nucleotide_query.fasta -db my_nucleotide_database -out results.out\033[0m\n'
+    '     This command translates both sequences and aligns them, saving the results to \033[1;33mresults.out\033[0m.\n\n'
+    'Basic usage examples:\n'
+    '  - \033[1;32mNucleotide alignments:\033[0m\n'
+    '    \033[1;33mpython pyBlast.py blastn -query my_query.fasta -db my_database\033[0m\n'
+    '  - \033[1;32mCreate a BLAST database:\033[0m\n'
+    '    \033[1;33mpython pyBlast.py makeblastdb -in my_sequences.fasta -dbtype nucl\033[0m\n'
+    '  - \033[1;32mProtein alignments:\033[0m\n'
+    '    \033[1;33mpython pyBlast.py blastp -query my_protein_query.fasta -db my_protein_database\033[0m\n'
+    '  - \033[1;32mProtein alignments with translated nucleotide sequences:\033[0m\n'
+    '    \033[1;33mpython pyBlast.py blastx -query my_nucleotide_query.fasta -db my_protein_database\033[0m\n'
+    '  - \033[1;32mProtein-nucleotide alignments:\033[0m\n'
+    '    \033[1;33mpython pyBlast.py tblastn -query my_protein_query.fasta -db my_nucleotide_database\033[0m\n'
+    '  - \033[1;32mTranslated nucleotide alignments:\033[0m\n'
+    '    \033[1;33mpython pyBlast.py tblastx -query my_nucleotide_query.fasta -db my_nucleotide_database\033[0m\n\n'
+    'For detailed help on each subcommand, use:\n'
+    '  - \033[1;33mpython pyBlast.py blastn -h\033[0m\n'
+    '  - \033[1;33mpython pyBlast.py makeblastdb -h\033[0m\n'
+    '  - \033[1;33mpython pyBlast.py blastp -h\033[0m\n'
+    '  - \033[1;33mpython pyBlast.py blastx -h\033[0m\n'
+    '  - \033[1;33mpython pyBlast.py tblastn -h\033[0m\n'
+    '  - \033[1;33mpython pyBlast.py tblastx -h\033[0m\n'
+)
+
 
     def define_blastn_arguments(self):
         blastn_parser = self.subparsers.add_parser(
@@ -1077,8 +1100,6 @@ class BlastTool:
         )
 
 
-
-##################################
     def define_blastx_arguments(self):
         blastx_parser = self.subparsers.add_parser(
             'blastx',
@@ -1305,10 +1326,6 @@ class BlastTool:
         )
 
 
-###############################
-
-
-###############################
         def define_tblastn_arguments(self):
             tblastn_parser = self.subparsers.add_parser(
                 'tblastn',
@@ -2018,28 +2035,468 @@ class BlastTool:
                     'Specify a PSI-BLAST checkpoint file for use in the search.'
                 )
             )
-################################
 
 
+        def define_tblastx_arguments(self):
+            tblastx_parser = self.subparsers.add_parser(
+                'tblastx',
+                help='Perform translated nucleotide-nucleotide sequence alignments',
+                formatter_class=argparse.RawTextHelpFormatter,
+                description=(
+                    'The \033[1;32mtblastx\033[0m command aligns nucleotide sequences against a nucleotide database by translating both query and database sequences into proteins. '
+                    'It is useful for detecting homologous genes and annotating genomes when both sequences are nucleotide-based.\n\n'
+                    'Key Features:\n'
+                    '  - Translated nucleotide-to-nucleotide alignments.\n'
+                    '  - Various filtering and scoring options to enhance search results.\n'
+                    '  - Output formats for integration with other tools and pipelines.\n\n'
+                    'Typical Usage:\n'
+                    '  \033[1;33mpython pyBlast.py tblastx -query query.fasta -db database -out results.txt -evalue 1e-10\033[0m\n'
+                    '  This command performs a BLAST search using translated sequences from \033[1;33mquery.fasta\033[0m against the translated nucleotide database \033[1;33mdatabase\033[0m, '
+                    'with results saved to \033[1;33mresults.txt\033[0m and an E-value threshold of \033[1;33m1e-10\033[0m.\n\n'
+                    'Additional Options:\n'
+                    '  \033[1;33m-db\033[0m: Name of the nucleotide database to search against.\n'
+                    '  \033[1;33m-query\033[0m: Input file containing nucleotide sequences to translate and search.\n'
+                    '  \033[1;33m-out\033[0m: File to write the search results.\n'
+                    '  \033[1;33m-evalue\033[0m: E-value threshold for reporting matches.\n'
+                    '  \033[1;33m-word_size\033[0m: Word size for the wordfinder algorithm.\n'
+                    '  \033[1;33m-qcov_hsp_perc\033[0m: Percent query coverage per HSP.\n'
+                    '  \033[1;33m-max_hsps\033[0m: Maximum number of HSPs per subject sequence to save for each query.\n'
+                    '  \033[1;33m-xdrop_ungap\033[0m: X-dropoff value for ungapped extensions.\n'
+                    '  \033[1;33m-searchsp\033[0m: Effective length of the search space.\n'
+                    '  \033[1;33m-sum_stats\033[0m: Enable or disable sum statistics.\n'
+                    '  \033[1;33m-max_intron_length\033[0m: Maximum intron length.\n'
+                    '  \033[1;33m-seg\033[0m: SEG filtering options.\n'
+                    '  \033[1;33m-soft_masking\033[0m: Apply filtering locations as soft masks.\n'
+                    '  \033[1;33m-matrix\033[0m: Scoring matrix name.\n'
+                    '  \033[1;33m-threshold\033[0m: Minimum score threshold for extending hits.\n'
+                    '  \033[1;33m-culling_limit\033[0m: Limit on hits enveloped by higher-scoring hits.\n'
+                    '  \033[1;33m-best_hit_overhang\033[0m: Best hit algorithm overhang value.\n'
+                    '  \033[1;33m-best_hit_score_edge\033[0m: Best hit algorithm score edge value.\n'
+                    '  \033[1;33m-subject_besthit\033[0m: Enable the best hit per subject sequence.\n'
+                    '  \033[1;33m-window_size\033[0m: Window size for multiple hits (use 0 for 1-hit algorithm).\n'
+                    '  \033[1;33m-lcase_masking\033[0m: Enable lowercase masking in query and subject sequences.\n'
+                    '  \033[1;33m-query_loc\033[0m: Location on the query sequence in 1-based offsets (Format: start-stop).\n'
+                    '  \033[1;33m-strand\033[0m: Strand to search against (e.g., plus, minus).\n'
+                    '  \033[1;33m-parse_deflines\033[0m: Enable parsing of query and subject deflines.\n'
+                    '  \033[1;33m-query_gencode\033[0m: Genetic code to use for query sequence translation.\n'
+                    '  \033[1;33m-db_gencode\033[0m: Genetic code to use for database sequence translation.\n'
+                    '  \033[1;33m-outfmt\033[0m: Output alignment format.\n'
+                    '  \033[1;33m-show_gis\033[0m: Display NCBI GI numbers in deflines.\n'
+                    '  \033[1;33m-num_descriptions\033[0m: Number of descriptions to show in the output.\n'
+                    '  \033[1;33m-num_alignments\033[0m: Number of alignments to show in the output.\n'
+                    '  \033[1;33m-line_length\033[0m: Line length for the output.\n'
+                    '  \033[1;33m-html\033[0m: Generate output in HTML format.\n'
+                    '  \033[1;33m-sorthits\033[0m: How to sort hits in the output.\n'
+                    '  \033[1;33m-sorthsps\033[0m: How to sort HSPs in the output.\n'
+                    '  \033[1;33m-max_target_seqs\033[0m: Maximum number of target sequences to report.\n'
+                    '  \033[1;33m-num_threads\033[0m: Number of threads to use for parallel processing.\n'
+                    '  \033[1;33m-remote\033[0m: Perform the search using the NCBI BLAST service instead of local resources.\n'
+                )
+            )
 
-###################################
+            tblastx_parser.add_argument(
+                '-db',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-db\033[0m\n'
+                    'Specify the nucleotide database to search against.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-query',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-query\033[0m\n'
+                    'Specify the input file containing nucleotide sequences to translate and search.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-out',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-out\033[0m\n'
+                    'Specify the file to write the results of the search to.'
+                )
+            )
 
-#####################################
+            tblastx_parser.add_argument(
+                '-evalue',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-evalue\033[0m\n'
+                    'Specify the Expectation value (E) threshold for saving hits.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-word_size',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-word_size\033[0m\n'
+                    'Specify the word size for the wordfinder algorithm.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-qcov_hsp_perc',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-qcov_hsp_perc\033[0m\n'
+                    'Specify the percent query coverage per HSP.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-max_hsps',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-max_hsps\033[0m\n'
+                    'Specify the maximum number of HSPs per subject sequence to save for each query.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-xdrop_ungap',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-xdrop_ungap\033[0m\n'
+                    'Specify the X-dropoff value for ungapped extensions.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-searchsp',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-searchsp\033[0m\n'
+                    'Specify the effective length of the search space.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-sum_stats',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-sum_stats\033[0m\n'
+                    'Enable or disable sum statistics in the results.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-max_intron_length',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-max_intron_length\033[0m\n'
+                    'Specify the maximum intron length to consider.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-seg',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-seg\033[0m\n'
+                    'Specify SEG filtering options.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-soft_masking',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-soft_masking\033[0m\n'
+                    'Apply filtering locations as soft masks.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-matrix',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-matrix\033[0m\n'
+                    'Specify the scoring matrix to use.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-threshold',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-threshold\033[0m\n'
+                    'Specify the minimum score threshold for extending hits.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-culling_limit',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-culling_limit\033[0m\n'
+                    'Specify the limit on hits enveloped by higher-scoring hits.'
+                )
+            )
 
+            tblastx_parser.add_argument(
+                '-best_hit_overhang',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-best_hit_overhang\033[0m\n'
+                    'Specify the best hit algorithm overhang value.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-best_hit_score_edge',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-best_hit_score_edge\033[0m\n'
+                    'Specify the best hit algorithm score edge value.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-subject_besthit',
+                action='store_true',
+                help=(
+                    '\033[1;33m-subject_besthit\033[0m\n'
+                    'Enable the best hit per subject sequence.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-window_size',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-window_size\033[0m\n'
+                    'Specify the window size for multiple hits (use 0 for 1-hit algorithm).'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-lcase_masking',
+                action='store_true',
+                help=(
+                    '\033[1;33m-lcase_masking\033[0m\n'
+                    'Enable lowercase masking in query and subject sequences.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-query_loc',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-query_loc\033[0m\n'
+                    'Specify location on the query sequence in 1-based offsets (Format: start-stop).'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-strand',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-strand\033[0m\n'
+                    'Specify the strand to search against (e.g., plus, minus).'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-parse_deflines',
+                action='store_true',
+                help=(
+                    '\033[1;33m-parse_deflines\033[0m\n'
+                    'Enable parsing of query and subject deflines.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-query_gencode',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-query_gencode\033[0m\n'
+                    'Specify the genetic code to use for query sequence translation.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-db_gencode',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-db_gencode\033[0m\n'
+                    'Specify the genetic code to use for database sequence translation.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-outfmt',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-outfmt\033[0m\n'
+                    'Specify the output alignment format.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-show_gis',
+                action='store_true',
+                help=(
+                    '\033[1;33m-show_gis\033[0m\n'
+                    'Display NCBI GI numbers in deflines.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-num_descriptions',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-num_descriptions\033[0m\n'
+                    'Specify the number of descriptions to show in the output.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-num_alignments',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-num_alignments\033[0m\n'
+                    'Specify the number of alignments to show in the output.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-line_length',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-line_length\033[0m\n'
+                    'Specify the line length for the output.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-html',
+                action='store_true',
+                help=(
+                    '\033[1;33m-html\033[0m\n'
+                    'Generate output in HTML format.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-sorthits',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-sorthits\033[0m\n'
+                    'Specify how to sort hits in the output.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-sorthsps',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-sorthsps\033[0m\n'
+                    'Specify how to sort HSPs in the output.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-max_target_seqs',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-max_target_seqs\033[0m\n'
+                    'Specify the maximum number of target sequences to report.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-num_threads',
+                nargs='?',
+                default='NotUsed',
+                const='UseWithoutParam',
+                help=(
+                    '\033[1;33m-num_threads\033[0m\n'
+                    'Specify the number of threads to use for parallel processing.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-remote',
+                action='store_true',
+                help=(
+                    '\033[1;33m-remote\033[0m\n'
+                    'Perform the search using the NCBI BLAST service instead of local resources.'
+                )
+            )
+
+            tblastx_parser.add_argument(
+                '-version',
+                action='store_true',
+                help=(
+                    '\033[1;33m-version\033[0m\n'
+                    'Show the version of the tblastx tool.'
+                )
+            )
 
 
     def run(self):
@@ -2055,10 +2512,12 @@ class BlastTool:
             program_path = shutil.which('makeblastdb')
         elif args.command == 'blastp':
             program_path = shutil.which('blastp')
-#################################
-
-
-##################################
+        elif args.command == 'blastx':
+            program_path = shutil.which('blastx')
+        elif args.command == 'tblastn':
+            program_path = shutil.which('tblastn')
+        elif args.command == 'tblastx':
+            program_path = shutil.which('tblastx')
         else:
             print(f"Unknown command: {args.command}")
             sys.exit(1)
@@ -2069,21 +2528,18 @@ class BlastTool:
 
         command = [program_path]
 
-
-
-
-#####################################
         if args.command == 'blastn':
             self.run_blastn(args, command)
         elif args.command == 'makeblastdb':
             self.run_makeblastdb(args, command)
         elif args.command == 'blastp':
             self.run_blastp(args, command)
-#################################
-
-
-
-
+        elif args.command == 'blastx':
+            self.run_blastx(args, command)
+        elif args.command == 'tblastn':
+            self.run_tblastn(args, command)
+        elif args.command == 'tblastx':
+            self.run_tblastx(args, command)
 
     def run_blastn(self, args, command):
         #print("#########var(args):##########",vars(args).items())
@@ -2125,7 +2581,6 @@ class BlastTool:
         subprocess.run(command)
         #print(command)
 
-
     def run_blastp(self, args, command):
         #print("#########var(args):##########",vars(args).items())
         for arg_name, value in vars(args).items():
@@ -2146,34 +2601,73 @@ class BlastTool:
         subprocess.run(command)
         #print(command)
 
+    def run_blastx(self, args, command):
+        #print("#########var(args):##########",vars(args).items())
+        for arg_name, value in vars(args).items():
+            if arg_name == 'help' and value is True:
+                self.parser.print_help()
+                sys.exit()
+            elif arg_name == 'help' and value is False:
+                continue
+            elif value == 'NotUsed':
+                continue
+            elif value == 'UseWithoutParam':
+                command.append(f"-{arg_name}")
+            elif arg_name == 'command' and value == 'blastx':
+                continue
+            else:
+                command.append(f"-{arg_name}")
+                command.append(f"{value}")
+        subprocess.run(command)
+        #print(command)
 
+    def run_tblastn(self, args, command):
+        #print("#########var(args):##########",vars(args).items())
+        for arg_name, value in vars(args).items():
+            if arg_name == 'help' and value is True:
+                self.parser.print_help()
+                sys.exit()
+            elif arg_name == 'help' and value is False:
+                continue
+            elif value == 'NotUsed':
+                continue
+            elif value == 'UseWithoutParam':
+                command.append(f"-{arg_name}")
+            elif arg_name == 'command' and value == 'tblastn':
+                continue
+            else:
+                command.append(f"-{arg_name}")
+                command.append(f"{value}")
+        subprocess.run(command)
+        #print(command)
 
-#######################################
-
-
-
-
-
-#########################################
-
-
-
-
-
-
-
-
+    def run_tblastx(self, args, command):
+        #print("#########var(args):##########",vars(args).items())
+        for arg_name, value in vars(args).items():
+            if arg_name == 'help' and value is True:
+                self.parser.print_help()
+                sys.exit()
+            elif arg_name == 'help' and value is False:
+                continue
+            elif value == 'NotUsed':
+                continue
+            elif value == 'UseWithoutParam':
+                command.append(f"-{arg_name}")
+            elif arg_name == 'command' and value == 'tblastx':
+                continue
+            else:
+                command.append(f"-{arg_name}")
+                command.append(f"{value}")
+        subprocess.run(command)
+        #print(command)
 
 if __name__ == "__main__":
     tool = BlastTool()
     tool.define_blastn_arguments()
     tool.define_makeblastdb_arguments()
     tool.define_blastp_arguments()
-    ###################################
-    
-    
-    
-    
-    ##########################################
+    tool.define_blastx_arguments()   
+    tool.define_tblastn_arguments()  
+    tool.define_tblastx_arguments()  
     tool.run()
 
