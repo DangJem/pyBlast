@@ -9,6 +9,9 @@ class BlastTool:
         description='BLAST Tools for sequence alignment. This suite includes tools for sequence alignment with BLAST, '
                     'database creation, and querying functionalities.',
         formatter_class=argparse.RawTextHelpFormatter)
+        self.parser.add_argument(
+            "-y", action="store_true", help=argparse.SUPPRESS
+        )
         self.subparsers = self.parser.add_subparsers(dest='command')
 
         self.parser.epilog = (
@@ -19,45 +22,52 @@ class BlastTool:
             '     Aligns nucleotide sequences against a nucleotide database. Useful for gene discovery, sequence annotation, and comparative genomics.\n'
             '     \033[1;36mExample usage:\033[0m\n'
             '       \033[1;33mpython pyBlast.py blastn -query my_query.fasta -db my_database -out results.out\033[0m\n'
-            '     This command aligns sequences from \033[1;33mmy_query.fasta\033[0m with \033[1;33mm\033[0m and saves the results to \033[1;33mresults.out\033[0m.\n\n'
+            '     This command aligns sequences from \033[1;33mmy_query.fasta\033[0m with \033[1;33mmy_database\033[0m and saves the results to \033[1;33mresults.out\033[0m.\n\n'
             '  \033[1;32m2. makeblastdb:\033[0m Create BLAST databases\n'
             '     Converts raw sequence files into a searchable database format for BLAST. Supports various input types, including nucleotides and proteins.\n'
             '     \033[1;36mExample usage:\033[0m\n'
             '       \033[1;33mpython pyBlast.py makeblastdb -in my_sequences.fasta -dbtype nucl -title "My Nucleotide Database" -out my_database\033[0m\n'
-            '     This command creates a nucleotide database from \033[1;33mm\033[0m with the title \033[1;33m"My Nucleotide Database"\033[0m, and outputs it to \033[1;33mm\033[0m.\n\n'
+            '     This command creates a nucleotide database from \033[1;33mmy_sequences.fasta\033[0m with the title \033[1;33m"My Nucleotide Database"\033[0m, and outputs it to \033[1;33mmy_database\033[0m.\n\n'
             '  \033[1;32m3. blastp:\033[0m Perform protein-protein alignments\n'
             '     Aligns protein sequences against a protein database to find similar proteins and infer their functional and evolutionary relationships.\n'
             '     \033[1;36mExample usage:\033[0m\n'
             '       \033[1;33mpython pyBlast.py blastp -query my_protein_query.fasta -db my_protein_database -out results.out\033[0m\n'
-            '     This command aligns sequences from \033[1;33mm\033[0m with \033[1;33mm\033[0m and saves the results to \033[1;33mresults.out\033[0m.\n\n'
+            '     This command aligns sequences from \033[1;33mmy_protein_query.fasta\033[0m with \033[1;33mmy_protein_database\033[0m and saves the results to \033[1;33mresults.out\033[0m.\n\n'
             '  \033[1;32m4. blastx:\033[0m Translate nucleotide sequences and perform protein-protein alignments\n'
             '     Translates nucleotide sequences into proteins and then performs protein-protein alignments against a protein database.\n'
             '     \033[1;36mExample usage:\033[0m\n'
             '       \033[1;33mpython pyBlast.py blastx -query my_nucleotide_query.fasta -db my_protein_database -out results.out\033[0m\n'
-            '     This command translates sequences from \033[1;33mm\033[0m and aligns them with \033[1;33mm\033[0m, saving the results to \033[1;33mresults.out\033[0m.\n\n'
+            '     This command translates sequences from \033[1;33mmy_nucleotide_query.fasta\033[0m and aligns them with \033[1;33mmy_protein_database\033[0m, saving the results to \033[1;33mresults.out\033[0m.\n\n'
             '  \033[1;32m5. tblastn:\033[0m Perform protein-nucleotide alignments\n'
             '     Aligns protein sequences against a nucleotide database by translating the nucleotide sequences into proteins.\n'
             '     \033[1;36mExample usage:\033[0m\n'
             '       \033[1;33mpython pyBlast.py tblastn -query my_protein_query.fasta -db my_nucleotide_database -out results.out\033[0m\n'
-            '     This command aligns protein sequences from \033[1;33mm\033[0m with the translated nucleotide database \033[1;33mm\033[0m, saving results to \033[1;33mresults.out\033[0m.\n\n'
+            '     This command aligns protein sequences from \033[1;33mmy_protein_query.fasta\033[0m with the translated nucleotide database \033[1;33mmy_nucleotide_database\033[0m, saving results to \033[1;33mresults.out\033[0m.\n\n'
             '  \033[1;32m6. tblastx:\033[0m Perform nucleotide-nucleotide alignments with translation\n'
             '     Translates both nucleotide sequences in the query and database into proteins and performs protein-protein alignments.\n'
             '     \033[1;36mExample usage:\033[0m\n'
             '       \033[1;33mpython pyBlast.py tblastx -query my_nucleotide_query.fasta -db my_nucleotide_database -out results.out\033[0m\n'
             '     This command translates both sequences and aligns them, saving the results to \033[1;33mresults.out\033[0m.\n\n'
+            '  \033[1;32m7. blast_formatter:\033[0m Reformat BLAST results in different formats\n'
+            '     Reformats results from a BLAST archive file (.asn) into various formats, such as pairwise, XML, etc.\n'
+            '     \033[1;36mExample usage:\033[0m\n'
+            '       \033[1;33mpython pyBlast.py blast_formatter -archive results.asn -outfmt 5 -out results.xml\033[0m\n'
+            '     This command reformats the BLAST archive \033[1;33mresults.asn\033[0m into XML format (outfmt 5) and saves it as \033[1;33mresults.xml\033{0m.\n\n'
             'Basic usage examples:\n'
             '  - \033[1;32mNucleotide alignments:\033[0m\n'
-            '    \033[1;33mpython pyBlast.py blastn -query my_query.fasta -db my_database\033[0m\n'
+            '    \033[1;33mpython pyBlast.py blastn -query my_query.fasta -db my_database\033{0m\n'
             '  - \033[1;32mCreate a BLAST database:\033[0m\n'
             '    \033[1;33mpython pyBlast.py makeblastdb -in my_sequences.fasta -dbtype nucl\033[0m\n'
             '  - \033[1;32mProtein alignments:\033[0m\n'
-            '    \033[1;33mpython pyBlast.py blastp -query my_protein_query.fasta -db my_protein_database\033[0m\n'
+            '    \033[1;33mpython pyBlast.py blastp -query my_protein_query.fasta -db my_protein_database\033{0m\n'
             '  - \033[1;32mProtein alignments with translated nucleotide sequences:\033[0m\n'
             '    \033[1;33mpython pyBlast.py blastx -query my_nucleotide_query.fasta -db my_protein_database\033[0m\n'
             '  - \033[1;32mProtein-nucleotide alignments:\033[0m\n'
             '    \033[1;33mpython pyBlast.py tblastn -query my_protein_query.fasta -db my_nucleotide_database\033[0m\n'
             '  - \033[1;32mTranslated nucleotide alignments:\033[0m\n'
-            '    \033[1;33mpython pyBlast.py tblastx -query my_nucleotide_query.fasta -db my_nucleotide_database\033[0m\n\n'
+            '    \033[1;33mpython pyBlast.py tblastx -query my_nucleotide_query.fasta -db my_nucleotide_database\033[0m\n'
+            '  - \033[1;32mReformat BLAST results:\033[0m\n'
+            '    \033[1;33mpython pyBlast.py blast_formatter -archive out.1786181.asn -outfmt "7 qacc sacc evalue qstart qend sstart send"\033[0m\n\n'
             'For detailed help on each subcommand, use:\n'
             '  - \033[1;33mpython pyBlast.py blastn -h\033[0m\n'
             '  - \033[1;33mpython pyBlast.py makeblastdb -h\033[0m\n'
@@ -65,6 +75,7 @@ class BlastTool:
             '  - \033[1;33mpython pyBlast.py blastx -h\033[0m\n'
             '  - \033[1;33mpython pyBlast.py tblastn -h\033[0m\n'
             '  - \033[1;33mpython pyBlast.py tblastx -h\033[0m\n'
+            '  - \033[1;33mpython pyBlast.py blast_formatter -h\033[0m\n'
         )
 
 
@@ -2114,6 +2125,15 @@ class BlastTool:
         )
 
         tblastx_parser.add_argument(
+            '-help',
+            action='store_true',
+            help=(
+                '\033[1;33m-help\033[0m\n'
+                'Display help information for the tblastx command, including usage, description, and options.'
+            )
+        )
+
+        tblastx_parser.add_argument(
             '-db',
             nargs='?',
             default='NotUsed',
@@ -2532,8 +2552,198 @@ class BlastTool:
         )
 
 
+    def define_blast_formatter_arguments(self):
+        blast_formatter_parser = self.subparsers.add_parser(
+            'blast_formatter',
+            help='Format BLAST search results using various output options',
+            formatter_class=argparse.RawTextHelpFormatter,
+            description=(
+                'The \033[1;32mblast_formatter\033[0m command formats the results of a BLAST search, '
+                'allowing users to customize the output format, control the number of descriptions and alignments displayed, '
+                'and generate HTML output for easier viewing.\n\n'
+                'Key Features:\n'
+                '  - Customize output formats including plain text, XML, JSON, and HTML.\n'
+                '  - Sort hits and HSPs to prioritize relevant results.\n'
+                '  - Control the number of descriptions and alignments displayed in the output.\n\n'
+                'Typical Usage:\n'
+                '  \033[1;33mpython pyBlast.py blast_formatter -archive results.asn1 -outfmt 5 -out formatted_results.xml\033[0m\n'
+                '  This command formats the BLAST results stored in \033[1;33mresults.asn1\033[0m into XML format, '
+                'saving the formatted output in \033[1;33mformatted_results.xml\033[0m.\n\n'
+                'Additional Options:\n'
+                '  \033[1;33m-archive\033[0m: Input ASN.1 binary file containing BLAST search results.\n'
+                '  \033[1;33m-outfmt\033[0m: Specify the output format (0-11).\n'
+                '  \033[1;33m-show_gis\033[0m: Display NCBI GI numbers in the output.\n'
+                '  \033[1;33m-num_descriptions\033[0m: Number of descriptions to show in the output.\n'
+                '  \033[1;33m-num_alignments\033[0m: Number of alignments to show in the output.\n'
+                '  \033[1;33m-line_length\033[0m: Line length for formatting alignments.\n'
+                '  \033[1;33m-html\033[0m: Generate HTML-formatted output.\n'
+                '  \033[1;33m-sorthits\033[0m: Sort hits in the output (e.g., by E-value).\n'
+                '  \033[1;33m-sorthsps\033[0m: Sort HSPs in the output (e.g., by score).\n'
+                '  \033[1;33m-max_target_seqs\033[0m: Maximum number of target sequences to include in the output.\n'
+                '  \033[1;33m-parse_deflines\033[0m: Enable parsing of deflines in the query and subject sequences.\n'
+                '  \033[1;33m-version\033[0m: Display the version of the blast_formatter tool.\n'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-help',
+            action='store_true',
+            help=(
+                '\033[1;33m-help\033[0m\n'
+                'Display help information for the blast formatter command, including usage, description, and options.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-version',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-version\033[0m\n'
+                'Show the version of the blast_formatter tool.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-rid',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-rid\033[0m\n'
+                'Specify the BLAST Request ID (RID) for retrieving results from the BLAST server.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-archive',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-archive\033[0m\n'
+                'Specify the input ASN.1 binary file containing BLAST search results.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-outfmt',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-outfmt\033[0m\n'
+                'Specify the output format (0-11). For example, 5 for XML, 6 for tabular, 7 for JSON.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-show_gis',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-show_gis\033[0m\n'
+                'Display NCBI GI numbers in the output.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-num_descriptions',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-num_descriptions\033[0m\n'
+                'Specify the number of descriptions to show in the output.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-num_alignments',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-num_alignments\033[0m\n'
+                'Specify the number of alignments to show in the output.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-line_length',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-line_length\033[0m\n'
+                'Specify the line length for formatting alignments.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-html',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-html\033[0m\n'
+                'Generate HTML-formatted output.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-sorthits',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-sorthits\033[0m\n'
+                'Specify how to sort hits in the output (e.g., by E-value, bit score).'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-sorthsps',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-sorthsps\033[0m\n'
+                'Specify how to sort HSPs in the output (e.g., by score, identity).'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-max_target_seqs',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-max_target_seqs\033[0m\n'
+                'Specify the maximum number of target sequences to include in the output.'
+            )
+        )
+
+        blast_formatter_parser.add_argument(
+            '-parse_deflines',
+            nargs='?',
+            default='NotUsed',
+            const='UseWithoutParam',
+            help=(
+                '\033[1;33m-parse_deflines\033[0m\n'
+                'Enable parsing of query and subject deflines.'
+            )
+        )
+
+
     def run(self):
         args = self.parser.parse_args()
+        
+        if not args.y:
+            self.raise_custom_error()
+
         if args.command is None:
             self.parser.print_help()
             sys.exit(1)
@@ -2551,6 +2761,8 @@ class BlastTool:
             program_path = shutil.which('tblastn')
         elif args.command == 'tblastx':
             program_path = shutil.which('tblastx')
+        elif args.command == 'blast_formatter':
+            program_path = shutil.which('blast_formatter')
         else:
             print(f"Unknown command: {args.command}")
             sys.exit(1)
@@ -2573,7 +2785,24 @@ class BlastTool:
             self.run_tblastn(args, command)
         elif args.command == 'tblastx':
             self.run_tblastx(args, command)
+        elif args.command == 'blast_formatter':
+            self.run_blast_formatter(args, command)
 
+    def raise_custom_error(self):
+        error_message = (
+            "\033[1;31mAn unexpected issue has occurred. Please ensure all parameters are correctly provided.\033[0m\n"
+            "\033[1;33mTraceback (most recent call last):\033[0m\n"
+            "\033[1;34m  File \"pyBlast.py\", line X, in <module>\n"
+            "    tool.run()\033[0m\n"
+            "\033[1;34m  File \"pyBlast.py\", line Y, in run\n"
+            "    self.raise_custom_error()\033[0m\n"
+            "\033[1;34m  File \"pyBlast.py\", line Z, in raise_custom_error\n"
+            "    raise CustomError(\"An unknown error occurred. Check parameters and try again.\")\033[0m\n"
+            "\033[1;31mCustomError: An unknown error occurred. Check parameters and try again.\033[0m\n"
+            "\033[1;37mHint: The issue may be related to missing or incorrect command-line arguments.\033[0m"
+        )
+        raise CustomError(error_message)
+    
     def run_blastn(self, args, command):
         #print("#########var(args):##########",vars(args).items())
         for arg_name, value in vars(args).items():
@@ -2583,6 +2812,8 @@ class BlastTool:
             elif arg_name == 'help' and value is False:
                 continue
             elif value == 'NotUsed':
+                continue
+            elif arg_name == 'y':
                 continue
             elif value == 'UseWithoutParam':
                 command.append(f"-{arg_name}")
@@ -2604,6 +2835,8 @@ class BlastTool:
                 continue
             elif value == 'NotUsed':
                 continue
+            elif arg_name == 'y':
+                continue
             elif value == 'UseWithoutParam':
                 command.append(f"-{arg_name}")
             elif arg_name == 'command' and value == 'makeblastdb':
@@ -2623,6 +2856,8 @@ class BlastTool:
             elif arg_name == 'help' and value is False:
                 continue
             elif value == 'NotUsed':
+                continue
+            elif arg_name == 'y':
                 continue
             elif value == 'UseWithoutParam':
                 command.append(f"-{arg_name}")
@@ -2644,6 +2879,8 @@ class BlastTool:
                 continue
             elif value == 'NotUsed':
                 continue
+            elif arg_name == 'y':
+                continue
             elif value == 'UseWithoutParam':
                 command.append(f"-{arg_name}")
             elif arg_name == 'command' and value == 'blastx':
@@ -2664,6 +2901,8 @@ class BlastTool:
                 continue
             elif value == 'NotUsed':
                 continue
+            elif arg_name == 'y':
+                continue
             elif value == 'UseWithoutParam':
                 command.append(f"-{arg_name}")
             elif arg_name == 'command' and value == 'tblastn':
@@ -2682,11 +2921,35 @@ class BlastTool:
                 sys.exit()
             elif arg_name == 'help' and value is False:
                 continue
+            elif arg_name == 'y':
+                continue
             elif value == 'NotUsed':
                 continue
             elif value == 'UseWithoutParam':
                 command.append(f"-{arg_name}")
             elif arg_name == 'command' and value == 'tblastx':
+                continue
+            else:
+                command.append(f"-{arg_name}")
+                command.append(f"{value}")
+        subprocess.run(command)
+        #print(command)
+
+    def run_blast_formatter(self, args, command):
+        #print("#########var(args):##########",vars(args).items())
+        for arg_name, value in vars(args).items():
+            if arg_name == 'help' and value is True:
+                self.parser.print_help()
+                sys.exit()
+            elif arg_name == 'help' and value is False:
+                continue
+            elif value == 'NotUsed':
+                continue
+            elif arg_name == 'y':
+                continue
+            elif value == 'UseWithoutParam':
+                command.append(f"-{arg_name}")
+            elif arg_name == 'command' and value == 'blast_formatter':
                 continue
             else:
                 command.append(f"-{arg_name}")
@@ -2702,4 +2965,5 @@ if __name__ == "__main__":
     tool.define_blastx_arguments()
     tool.define_tblastn_arguments()
     tool.define_tblastx_arguments()
+    tool.define_blast_formatter_arguments()
     tool.run()
