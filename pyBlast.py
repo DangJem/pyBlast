@@ -2741,13 +2741,12 @@ class BlastTool:
 
     def run(self):
         args = self.parser.parse_args()
-        
-        if not args.y:
-            self.help_messages()
 
         if args.command is None:
             self.parser.print_help()
             sys.exit(1)
+        if not args.y:
+            self.help_messages()
 
         program_path = None
         if args.command == 'blastn':
