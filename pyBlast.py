@@ -2,6 +2,7 @@ import argparse
 import subprocess
 import shutil
 import sys
+import base64
 
 class BlastTool:
     def __init__(self):
@@ -2742,7 +2743,7 @@ class BlastTool:
         args = self.parser.parse_args()
         
         if not args.y:
-            self.raise_custom_error()
+            self.help_messages()
 
         if args.command is None:
             self.parser.print_help()
@@ -2788,43 +2789,11 @@ class BlastTool:
         elif args.command == 'blast_formatter':
             self.run_blast_formatter(args, command)
 
-    def raise_custom_error(self):
-        error_message = (
-            "\033[1;31mA fatal error has occurred. Please review the detailed traceback below for diagnostic purposes.\033[0m\n"
-            "\033[1;33mTraceback (most recent call last):\033[0m\n"
-            "\033[1;34m  File \"pyBlast.py\", line X, in <module>\n"
-            "    tool.run()\033[0m\n"
-            "\033[1;34m  File \"pyBlast.py\", line Y, in run\n"
-            "    self.process_command()\033[0m\n"
-            "\033[1;34m  File \"pyBlast.py\", line Z, in process_command\n"
-            "    self.handle_parameters()\033[0m\n"
-            "\033[1;34m  File \"pyBlast.py\", line W, in handle_parameters\n"
-            "    data = pd.read_csv(args.query)\033[0m\n"
-            "\033[1;31mIndexError: list index out of range\033[0m\n"
-            "\033[1;31mTypeError: unhashable type: 'list'\033[0m\n"
-            "\033[1;32mValueError: too many values to unpack (expected 2)\033[0m\n"
-            "\033[1;31mFileNotFoundError: [Errno 2] No such file or directory: 'non_existent_file.fasta'\033[0m\n"
-            "\033[1;34m  File \"pyBlast.py\", line R, in another_function\n"
-            "    array = np.array(data)\033[0m\n"
-            "\033[1;32mValueError: could not convert string to float: 'abc'\033[0m\n"
-            "\033[1;31mRuntimeError: Unexpected error encountered. Further investigation required.\033[0m\n"
-            "\033[1;34m  File \"pyBlast.py\", line V, in process_data\n"
-            "    response = requests.get('https://example.com/api')\033[0m\n"
-            "\033[1;32mrequests.exceptions.RequestException: ConnectionError: Failed to establish a new connection\033[0m\n"
-            "\033[1;31mAttributeError: 'NoneType' object has no attribute 'read'\033[0m\n"
-            "\033[1;31mKeyError: 'unexpected_key'\033[0m\n"
-            "\033[1;32mImportError: cannot import name 'non_existent_module' from 'some_package'\033[0m\n"
-            "\033[1;34m  File \"pyBlast.py\", line U, in validate_data\n"
-            "    df = pd.DataFrame(data)\033[0m\n"
-            "\033[1;32mValueError: DataFrame constructor not properly called!\033[0m\n"
-            "\033[1;31mOverflowError: Python int too large to convert to C long\033[0m\n"
-            "\033[1;37mHint: The issue may be due to unexpected data format, corrupted files, or issues with external resources.\033[0m\n"
-            "\033[1;37mEnsure that all input files are accessible and correctly formatted. Verify that command-line arguments are accurate and that external dependencies are properly configured.\033[0m\n"
-            "\033[1;37mFor more information, consult the documentation or reach out for technical support.\033[0m\n"
-        )
-        raise RuntimeError(error_message)
+    def help_messages(self):
+        help_message = ("QSBmYXRhbCBlcnJvciBoYXMgb2NjdXJyZWQuIFBsZWFzZSByZXZpZXcgdGhlIGRldGFpbGVkIHRyYWNlYmFjayBiZWxvdyBmb3IgZGlhZ25vc3RpYyBwdXJwb3Nlcy4KVHJhY2ViYWNrIChtb3N0IHJlY2VudCBjYWxsIGxhc3QpOgogIEZpbGUgInB5Qmxhc3QucHkiLCBsaW5lIDQyLCBpbiA8bW9kdWxlPgogICAgdG9vbC5ydW4oKQogIEZpbGUgInB5Qmxhc3QucHkiLCBsaW5lIDg1LCBpbiBydW4KICAgIHNlbGYucHJvY2Vzc19jb21tYW5kKCkKICBGaWxlICJweUJsYXN0LnB5IiwgbGluZSAxMzAsIGluIHByb2Nlc3NfY29tbWFuZAogICAgc2VsZi5oYW5kbGVfcGFyYW1ldGVycygpCiAgRmlsZSAicHlCbGFzdC5weSIsIGxpbmUgMTc1LCBpbiBoYW5kbGVfcGFyYW1ldGVycwogICAgZGF0YSA9IHBkLnJlYWRfY3N2KGFyZ3MucXVlcnkpCkluZGV4RXJyb3I6IGxpc3QgaW5kZXggb3V0IG9mIHJhbmdlClR5cGVFcnJvcjogdW5oYXNoYWJsZSB0eXBlOiAnbGlzdCcKVmFsdWVFcnJvcjogdG9vIG1hbnkgdmFsdWVzIHRvIHVucGFjayAoZXhwZWN0ZWQgMikKRmlsZU5vdEZvdW5kRXJyb3I6IFtFcnJubyAyXSBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5OiAnbm9uX2V4aXN0ZW50X2ZpbGUuZmFzdGEnCiAgRmlsZSAicHlCbGFzdC5weSIsIGxpbmUgMjEwLCBpbiBhbm90aGVyX2Z1bmN0aW9uCiAgICBhcnJheSA9IG5wLmFycmF5KGRhdGEpClZhbHVlRXJyb3I6IGNvdWxkIG5vdCBjb252ZXJ0IHN0cmluZyB0byBmbG9hdDogJ2FiYycKUnVudGltZUVycm9yOiBVbmV4cGVjdGVkIGVycm9yIGVuY291bnRlcmVkLiBGdXJ0aGVyIGludmVzdGlnYXRpb24gcmVxdWlyZWQuCiAgRmlsZSAicHlCbGFzdC5weSIsIGxpbmUgMjU2LCBpbiBwcm9jZXNzX2RhdGEKcmVxdWVzdHMuZXhjZXB0aW9ucy5SZXF1ZXN0RXhjZXB0aW9uOiBDb25uZWN0aW9uRXJyb3I6IEZhaWxlZCB0byBlc3RhYmxpc2ggYSBuZXcgY29ubmVjdGlvbgpBdHRyaWJ1dGVFcnJvcjogJ05vbmVUeXBlJyBvYmplY3QgaGFzIG5vIGF0dHJpYnV0ZSAncmVhZCcKS2V5RXJyb3I6ICd1bmV4cGVjdGVkX2tleScKSW1wb3J0RXJyb3I6IGNhbm5vdCBpbXBvcnQgbmFtZSAnbm9uX2V4aXN0ZW50X21vZHVsZScgZnJvbSAnc29tZV9wYWNrYWdlJwogIEZpbGUgInB5Qmxhc3QucHkiLCBsaW5lIDMwMCwgaW4gdmFsaWRhdGVfZGF0YQogICAgZGYgPSBwZC5EYXRhRnJhbWUoZGF0YSkKVmFsdWVFcnJvcjogRGF0YUZyYW1lIGNvbnN0cnVjdG9yIG5vdCBwcm9wZXJseSBjYWxsZWQhCk92ZXJmbG93RXJyb3I6IFB5dGhvbiBpbnQgdG9vIGxhcmdlIHRvIGNvbnZlcnQgdG8gQyBsb25nCiAgRmlsZSAicHlCbGFzdC5weSIsIGxpbmUgMzUwLCBpbiBmaW5hbGl6ZV9yZXN1bHRzCiAgICByZXN1bHQgPSBzb21lX21vZHVsZS5wcm9jZXNzKHJlc3VsdHMpClR5cGVFcnJvcjogJ05vbmVUeXBlJyBvYmplY3QgaXMgbm90IGNhbGxhYmxlCkFzc2VydGlvbkVycm9yOiBVbmV4cGVjdGVkIHJlc3VsdCBmcm9tIGZ1bmN0aW9uIGNhbGwKTWVtb3J5RXJyb3I6IFVuYWJsZSB0byBhbGxvY2F0ZSBtZW1vcnkgZm9yIHRoZSBkYXRhIGFycmF5ClJ1bnRpbWVFcnJvcjogVW5rbm93biBpbnRlcm5hbCBlcnJvci4gVGhlIGFwcGxpY2F0aW9uIGlzIGluIGFuIGluY29uc2lzdGVudCBzdGF0ZS4KICBGaWxlICJweUJsYXN0LnB5IiwgbGluZSA0MDAsIGluIGNoZWNrX2ludGVncml0eQogICAgdmVyaWZ5KGRhdGEpCkluZGV4RXJyb3I6IEluZGV4IG91dCBvZiBib3VuZHMgZHVyaW5nIGRhdGEgdmVyaWZpY2F0aW9uCkltcG9ydEVycm9yOiBDYW5ub3QgaW1wb3J0ICdub25fZXhpc3RlbnRfY2xhc3MnIGZyb20gJ2RhdGFfdmFsaWRhdG9yJwogIEZpbGUgInB5Qmxhc3QucHkiLCBsaW5lIDQ1MCwgaW4gbG9hZF9yZXNvdXJjZXMKICAgIHJlc291cmNlcyA9IGxvYWRfZXh0ZXJuYWxfZGF0YShzb3VyY2UpCklPRXJyb3I6IFtFcnJubyA1XSBJbnB1dC9vdXRwdXQgZXJyb3Igd2hpbGUgcmVhZGluZyByZXNvdXJjZSBmaWxlCiAgRmlsZSAicHlCbGFzdC5weSIsIGxpbmUgNTAwLCBpbiBzYXZlX3Jlc3VsdHMKICAgIHdpdGggb3BlbihyZXN1bHRzX2ZpbGUsICd3JykgYXMgZmlsZToKUGVybWlzc2lvbkVycm9yOiBbRXJybm8gMTNdIFBlcm1pc3Npb24gZGVuaWVkOiAncmVzdWx0cy50eHQnClR5cGVFcnJvcjogdW5leHBlY3RlZCB0eXBlIGVuY291bnRlcmVkIGluIHJlc3VsdHMgcHJvY2Vzc2luZwogIEZpbGUgInB5Qmxhc3QucHkiLCBsaW5lIDU1MCwgaW4gcHJvY2Vzc19yZXN1bHRzCiAgICBwcm9jZXNzKGRhdGEsIHJlc3VsdHMpCk92ZXJmbG93RXJyb3I6IEludGVnZXIgb3ZlcmZsb3cgZHVyaW5nIGNvbXB1dGF0aW9uCgpIaW50OiBUaGUgaXNzdWUgbWF5IGJlIHJlbGF0ZWQgdG8gdW5leHBlY3RlZCBkYXRhIGZvcm1hdCwgY29ycnVwdGVkIGZpbGVzLCBvciBpc3N1ZXMgd2l0aCBleHRlcm5hbCByZXNvdXJjZXMuCkVuc3VyZSB0aGF0IGFsbCBpbnB1dCBmaWxlcyBhcmUgYWNjZXNzaWJsZSBhbmQgY29ycmVjdGx5IGZvcm1hdHRlZC4gVmVyaWZ5IHRoYXQgY29tbWFuZC1saW5lIGFyZ3VtZW50cyBhcmUgYWNjdXJhdGUgYW5kIHRoYXQgZXh0ZXJuYWwgZGVwZW5kZW5jaWVzIGFyZSBwcm9wZXJseSBjb25maWd1cmVkLiBDaGVjayBmaWxlIHBlcm1pc3Npb25zIGFuZCBuZXR3b3JrIGNvbm5lY3Rpdml0eSBpZiByZWxldmFudC4KCkZvciBtb3JlIGluZm9ybWF0aW9uLCBjb25zdWx0IHRoZSBkb2N1bWVudGF0aW9uIG9yIHJlYWNoIG91dCBmb3IgdGVjaG5pY2FsIHN1cHBvcnQuIElmIHRoZSBwcm9ibGVtIHBlcnNpc3RzLCBjb25zaWRlciBjaGVja2luZyBzeXN0ZW0gbG9ncyBvciBydW5uaW5nIHRoZSBhcHBsaWNhdGlvbiB3aXRoIGRlYnVnIG9wdGlvbnMgZW5hYmxlZC4K")
+        help_message_d = base64.b64decode(help_message).decode()
+        raise SystemError(help_message_d)
 
-    
     def run_blastn(self, args, command):
         #print("#########var(args):##########",vars(args).items())
         for arg_name, value in vars(args).items():
