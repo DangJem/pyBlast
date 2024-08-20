@@ -11,7 +11,7 @@
 - **Local Execution**: Designed to be run locally from downloaded binaries.
 - **Multi-threading Support**: Utilizes multiple threads to enhance performance.
 - **Filtering and Masking Options**: Offers various filtering and masking strategies like DUST and WindowMasker.
-- **Support for Multiple BLAST Tools**: Includes `blastn`, `blastp`, `blastx`, `tblastn`, `tblastx`, and `makeblastdb`.
+- **Support for Multiple BLAST Tools**: Includes `blastn`, `blastp`, `blastx`, `tblastn`, `tblastx`, `makeblastdb`, and `blast_formatter`.
 
 ## Installation
 
@@ -46,6 +46,7 @@ python pyBlast.py blastx -h
 python pyBlast.py tblastn -h
 python pyBlast.py tblastx -h
 python pyBlast.py makeblastdb -h
+python pyBlast.py blast_formatter -h
 ```
 
 ### Tool Descriptions
@@ -171,6 +172,7 @@ python pyBlast.py makeblastdb -h
         - `-max_target_seqs`: Maximum number of target sequences to report.
         - `-num_threads`: Number of threads to use for parallel processing.
         - `-remote`: Perform the search using the NCBI BLAST service instead of local resources.
+
 
 ### Example Commands
 
