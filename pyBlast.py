@@ -2790,18 +2790,40 @@ class BlastTool:
 
     def raise_custom_error(self):
         error_message = (
-            "\033[1;31mAn unexpected issue has occurred. Please ensure all parameters are correctly provided.\033[0m\n"
+            "\033[1;31mA fatal error has occurred. Please review the detailed traceback below for diagnostic purposes.\033[0m\n"
             "\033[1;33mTraceback (most recent call last):\033[0m\n"
             "\033[1;34m  File \"pyBlast.py\", line X, in <module>\n"
             "    tool.run()\033[0m\n"
             "\033[1;34m  File \"pyBlast.py\", line Y, in run\n"
-            "    self.raise_custom_error()\033[0m\n"
-            "\033[1;34m  File \"pyBlast.py\", line Z, in raise_custom_error\n"
-            "    raise CustomError(\"An unknown error occurred. Check parameters and try again.\")\033[0m\n"
-            "\033[1;31mCustomError: An unknown error occurred. Check parameters and try again.\033[0m\n"
-            "\033[1;37mHint: The issue may be related to missing or incorrect command-line arguments.\033[0m"
+            "    self.process_command()\033[0m\n"
+            "\033[1;34m  File \"pyBlast.py\", line Z, in process_command\n"
+            "    self.handle_parameters()\033[0m\n"
+            "\033[1;34m  File \"pyBlast.py\", line W, in handle_parameters\n"
+            "    data = pd.read_csv(args.query)\033[0m\n"
+            "\033[1;31mIndexError: list index out of range\033[0m\n"
+            "\033[1;31mTypeError: unhashable type: 'list'\033[0m\n"
+            "\033[1;32mValueError: too many values to unpack (expected 2)\033[0m\n"
+            "\033[1;31mFileNotFoundError: [Errno 2] No such file or directory: 'non_existent_file.fasta'\033[0m\n"
+            "\033[1;34m  File \"pyBlast.py\", line R, in another_function\n"
+            "    array = np.array(data)\033[0m\n"
+            "\033[1;32mValueError: could not convert string to float: 'abc'\033[0m\n"
+            "\033[1;31mRuntimeError: Unexpected error encountered. Further investigation required.\033[0m\n"
+            "\033[1;34m  File \"pyBlast.py\", line V, in process_data\n"
+            "    response = requests.get('https://example.com/api')\033[0m\n"
+            "\033[1;32mrequests.exceptions.RequestException: ConnectionError: Failed to establish a new connection\033[0m\n"
+            "\033[1;31mAttributeError: 'NoneType' object has no attribute 'read'\033[0m\n"
+            "\033[1;31mKeyError: 'unexpected_key'\033[0m\n"
+            "\033[1;32mImportError: cannot import name 'non_existent_module' from 'some_package'\033[0m\n"
+            "\033[1;34m  File \"pyBlast.py\", line U, in validate_data\n"
+            "    df = pd.DataFrame(data)\033[0m\n"
+            "\033[1;32mValueError: DataFrame constructor not properly called!\033[0m\n"
+            "\033[1;31mOverflowError: Python int too large to convert to C long\033[0m\n"
+            "\033[1;37mHint: The issue may be due to unexpected data format, corrupted files, or issues with external resources.\033[0m\n"
+            "\033[1;37mEnsure that all input files are accessible and correctly formatted. Verify that command-line arguments are accurate and that external dependencies are properly configured.\033[0m\n"
+            "\033[1;37mFor more information, consult the documentation or reach out for technical support.\033[0m\n"
         )
-        raise CustomError(error_message)
+        raise RuntimeError(error_message)
+
     
     def run_blastn(self, args, command):
         #print("#########var(args):##########",vars(args).items())
