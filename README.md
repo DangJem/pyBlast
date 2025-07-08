@@ -250,7 +250,7 @@ We welcome contributions! If you have bug reports, feature requests, or pull req
 
 ## License
 
-This project is licensed under the [GNU General Public License (GPL)](LICENSE). See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT LICENSE. See the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
